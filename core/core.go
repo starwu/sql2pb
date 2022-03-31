@@ -227,6 +227,7 @@ func (s *Schema) String() string {
 		m.GenRpcDelReqMessage(buf)
 		m.GenRpcGetByIdReqMessage(buf)
 		m.GenRpcSearchReqMessage(buf)
+		m.GenRpcGetListAllReqMessage(buf)
 	}
 
 	buf.WriteString("\n")
@@ -520,6 +521,37 @@ func (m Message) GenRpcSearchReqMessage(buf *bytes.Buffer) {
 	m.Name = "Search" + mOrginName + "Resp"
 	m.Fields = []MessageField{
 		{Typ: "repeated " + mOrginName, Name: stringx.From(firstWord + mOrginName[1:]).ToCamelWithStartLower(), tag: 1},
+		{Typ: "int64", Name: "limit", tag: 2},
+		{Typ: "int64", Name: "total", tag: 3},
+	}
+	buf.WriteString(fmt.Sprintf("%s\n", m))
+
+	//reset
+	m.Name = mOrginName
+	m.Fields = mOrginFields
+}
+
+//gen add resp message    GetSysMenuListAll
+func (m Message) GenRpcGetListAllReqMessage(buf *bytes.Buffer) {
+	mOrginName := m.Name
+	mOrginFields := m.Fields
+
+	m.Name = "Get" + mOrginName + "ListAllReq"
+	m.Fields = []MessageField{
+		{Typ: "int64", Name: "delStatus", tag: 1},
+	}
+	buf.WriteString(fmt.Sprintf("%s\n", m))
+
+	//reset
+	m.Name = mOrginName
+	m.Fields = mOrginFields
+
+	//resp
+	firstWord := strings.ToLower(string(m.Name[0]))
+	m.Name = "Get" + mOrginName + "ListAllResp"
+	m.Fields = []MessageField{
+		{Typ: "repeated " + mOrginName, Name: stringx.From(firstWord + mOrginName[1:]).ToCamelWithStartLower(), tag: 1},
+		{Typ: "int64", Name: "total", tag: 2},
 	}
 	buf.WriteString(fmt.Sprintf("%s\n", m))
 
