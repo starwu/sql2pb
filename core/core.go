@@ -385,7 +385,9 @@ func (m Message) GenRpcAddReqRespMessage(buf *bytes.Buffer) {
 
 	//resp
 	m.Name = "Add" + mOrginName + "Resp"
-	m.Fields = []MessageField{}
+	m.Fields = []MessageField{
+		{Name: "id", Typ: "int64", tag: 1},
+	}
 	buf.WriteString(fmt.Sprintf("%s\n", m))
 
 	//reset
@@ -417,7 +419,9 @@ func (m Message) GenRpcUpdateReqMessage(buf *bytes.Buffer) {
 
 	//resp
 	m.Name = "Update" + mOrginName + "Resp"
-	m.Fields = []MessageField{}
+	m.Fields = []MessageField{
+		{Name: "id", Typ: "int64", tag: 1},
+	}
 	buf.WriteString(fmt.Sprintf("%s\n", m))
 
 	//reset
