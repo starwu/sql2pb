@@ -1,4 +1,4 @@
-module sql2pb
+module github.com/starwu/sql2pb
 
 go 1.17
 

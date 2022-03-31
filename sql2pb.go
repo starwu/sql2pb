@@ -5,8 +5,9 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"sql2pb/core"
 	"strings"
+
+	"github.com/starwu/sql2pb/core"
 
 	_ "github.com/go-sql-driver/mysql"
 )
