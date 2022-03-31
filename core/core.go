@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"database/sql"
 	"fmt"
-	"github.com/Mikaelemmmm/sql2pb/tools/stringx"
 	"log"
 	"regexp"
 	"sort"
 	"strings"
+
+	"sql2pb/tools/stringx"
 
 	"github.com/chuckpreslar/inflect"
 	"github.com/serenize/snaker"
@@ -30,7 +31,7 @@ const (
 // Do not rely on the structure of the Generated schema to provide any context about
 // the protobuf types. The schema reflects the layout of a protobuf file and should be used
 // to pipe the output of the `Schema.String()` to a file.
-func GenerateSchema(db *sql.DB, table string, ignoreTables []string, serviceName,goPkg, pkg string) (*Schema, error) {
+func GenerateSchema(db *sql.DB, table string, ignoreTables []string, serviceName, goPkg, pkg string) (*Schema, error) {
 	s := &Schema{}
 
 	dbs, err := dbSchema(db)
@@ -48,9 +49,6 @@ func GenerateSchema(db *sql.DB, table string, ignoreTables []string, serviceName
 	} else {
 		s.GoPackage = "./" + s.Package
 	}
-
-
-
 
 	cols, err := dbColumns(db, dbs, table)
 	if nil != err {
@@ -114,17 +112,17 @@ func dbSchema(db *sql.DB) (string, error) {
 
 func dbColumns(db *sql.DB, schema, table string) ([]Column, error) {
 
-	tableArr:= strings.Split(table,",")
+	tableArr := strings.Split(table, ",")
 
 	q := "SELECT TABLE_NAME, COLUMN_NAME, IS_NULLABLE, DATA_TYPE, " +
 		"CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, NUMERIC_SCALE, COLUMN_TYPE " +
 		"FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ?"
 
 	if table != "" && table != "*" {
-		q +=  " AND TABLE_NAME IN('" + strings.TrimRight(strings.Join(tableArr,"' ,'"),",") + "')"
+		q += " AND TABLE_NAME IN('" + strings.TrimRight(strings.Join(tableArr, "' ,'"), ",") + "')"
 	}
 
-	q +=  " ORDER BY TABLE_NAME, ORDINAL_POSITION"
+	q += " ORDER BY TABLE_NAME, ORDINAL_POSITION"
 
 	rows, err := db.Query(q, schema)
 	defer rows.Close()
@@ -153,13 +151,13 @@ func dbColumns(db *sql.DB, schema, table string) ([]Column, error) {
 
 // Schema is a representation of a protobuf schema.
 type Schema struct {
-	Syntax    string
+	Syntax      string
 	ServiceName string
-	GoPackage string
-	Package   string
-	Imports   sort.StringSlice
-	Messages  MessageCollection
-	Enums     EnumCollection
+	GoPackage   string
+	Package     string
+	Imports     sort.StringSlice
+	Messages    MessageCollection
+	Enums       EnumCollection
 }
 
 // MessageCollection represents a sortable collection of messages.
@@ -488,12 +486,24 @@ func (m Message) GenRpcSearchReqMessage(buf *bytes.Buffer) {
 	m.Name = "Search" + mOrginName + "Req"
 	curFields := []MessageField{}
 	for _, field := range m.Fields {
-		if isInSlice([]string{"version", "del_state", "delete_time"}, field.Name) {
+		// if isInSlice([]string{"version", "del_state", "delete_time"}, field.Name) {
+		if isInSlice([]string{"version", "delete_time"}, field.Name) {
 			continue
 		}
 		field.Name = stringx.From(field.Name).ToCamelWithStartLower()
+
 		curFields = append(curFields, field)
 	}
+	// add date time range
+	curFields = append(curFields, MessageField{Typ: "int64", Name: "offset", tag: curFields[len(curFields)-1].tag + 1})
+	curFields = append(curFields, MessageField{Typ: "int64", Name: "limit", tag: curFields[len(curFields)-1].tag + 1})
+	curFields = append(curFields, MessageField{Typ: "string", Name: "sortKey", tag: curFields[len(curFields)-1].tag + 1})
+	curFields = append(curFields, MessageField{Typ: "string", Name: "sortType", tag: curFields[len(curFields)-1].tag + 1})
+	curFields = append(curFields, MessageField{Typ: "int64", Name: "createBegin", tag: curFields[len(curFields)-1].tag + 1})
+	curFields = append(curFields, MessageField{Typ: "int64", Name: "createEnd", tag: curFields[len(curFields)-1].tag + 1})
+	curFields = append(curFields, MessageField{Typ: "int64", Name: "updateBegin", tag: curFields[len(curFields)-1].tag + 1})
+	curFields = append(curFields, MessageField{Typ: "int64", Name: "updateEnd", tag: curFields[len(curFields)-1].tag + 1})
+
 	m.Fields = curFields
 	buf.WriteString(fmt.Sprintf("%s\n", m))
 

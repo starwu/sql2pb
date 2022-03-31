@@ -1,6 +1,6 @@
-module github.com/Mikaelemmmm/sql2pb
+module sql2pb
 
-go 1.18
+go 1.17
 
 require (
 	github.com/chuckpreslar/inflect v0.0.0-20150228233301-423e3ac59c61
