@@ -488,12 +488,24 @@ func (m Message) GenRpcSearchReqMessage(buf *bytes.Buffer) {
 	m.Name = "Search" + mOrginName + "Req"
 	curFields := []MessageField{}
 	for _, field := range m.Fields {
-		if isInSlice([]string{"version", "del_state", "delete_time"}, field.Name) {
+		//if isInSlice([]string{"version", "del_state", "delete_time"}, field.Name) {
+		if isInSlice([]string{"version", "delete_time"}, field.Name) {
 			continue
 		}
 		field.Name = stringx.From(field.Name).ToCamelWithStartLower()
 		curFields = append(curFields, field)
 	}
+	
+	// add date time range
+	curFields = append(curFields, MessageField{Typ: "int64", Name: "offset", tag: curFields[len(curFields)-1].tag + 1})
+	curFields = append(curFields, MessageField{Typ: "int64", Name: "limit", tag: curFields[len(curFields)-1].tag + 1})
+	curFields = append(curFields, MessageField{Typ: "string", Name: "sortKey", tag: curFields[len(curFields)-1].tag + 1})
+	curFields = append(curFields, MessageField{Typ: "string", Name: "sortType", tag: curFields[len(curFields)-1].tag + 1})
+	curFields = append(curFields, MessageField{Typ: "int64", Name: "createBegin", tag: curFields[len(curFields)-1].tag + 1})
+	curFields = append(curFields, MessageField{Typ: "int64", Name: "createEnd", tag: curFields[len(curFields)-1].tag + 1})
+	curFields = append(curFields, MessageField{Typ: "int64", Name: "updateBegin", tag: curFields[len(curFields)-1].tag + 1})
+	curFields = append(curFields, MessageField{Typ: "int64", Name: "updateEnd", tag: curFields[len(curFields)-1].tag + 1})
+	
 	m.Fields = curFields
 	buf.WriteString(fmt.Sprintf("%s\n", m))
 
