@@ -85,7 +85,7 @@ func typesFromColumns(s *Schema, cols []Column, ignoreTables []string) error {
 
 		msg, ok := messageMap[messageName]
 		if !ok {
-			messageMap[messageName] = &Message{Name: messageName}
+			messageMap[messageName] = &Message{Name: messageName,Comment: c.TableComment}
 			msg = messageMap[messageName]
 		}
 
@@ -501,7 +501,7 @@ func (m Message) GenRpcGetByIdReqMessage(buf *bytes.Buffer) {
 
 	m.Name = "Get" + mOrginName + "ByIdReq"
 	m.Fields = []MessageField{
-		{Name: "id", Typ: "int64", tag: 1},
+		{Name: "id", Typ: "int64", tag: 1, Comment: "id"},
 	}
 	buf.WriteString(fmt.Sprintf("%s\n", m))
 
@@ -609,7 +609,7 @@ func (m Message) String() string {
 
 	buf.WriteString(fmt.Sprintf("message %s {\n", m.Name))
 	for _, f := range m.Fields {
-		buf.WriteString(fmt.Sprintf("%s%s;\n", indent, f))
+		buf.WriteString(fmt.Sprintf("%s%s; //%s\n", indent, f,f.Comment))
 	}
 	buf.WriteString("}\n")
 
