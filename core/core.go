@@ -538,7 +538,7 @@ func (m Message) GenRpcSearchReqMessage(buf *bytes.Buffer) {
 		{Typ: "int64", Name: "createBegin", tag: 5, Comment: "createBegin"},
 		{Typ: "int64", Name: "createEnd", tag: 6, Comment: "createEnd"},
 		{Typ: "int64", Name: "updateBegin", tag: 7, Comment: "updateBegin"},
-		{Typ: "int64", Name: "limupdateEndit", tag: 8, Comment: "updateEnd"},
+		{Typ: "int64", Name: "updateEnd", tag: 8, Comment: "updateEnd"},
 	}
 	var filedTag = len(curFields)
 	for _, field := range m.Fields {
