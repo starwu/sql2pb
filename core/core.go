@@ -492,7 +492,7 @@ func (m Message) GenRpcSearchReqMessage(buf *bytes.Buffer) {
 	curFields := []MessageField{}
 	for _, field := range m.Fields {
 		// if isInSlice([]string{"version", "del_state", "delete_time"}, field.Name) {
-		if isInSlice([]string{"version", "delete_time"}, field.Name) {
+		if isInSlice([]string{"version", "delete_time", "create_time", "update_time"}, field.Name) {
 			continue
 		}
 		field.Name = stringx.From(field.Name).ToCamelWithStartLower()
