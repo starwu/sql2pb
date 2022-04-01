@@ -460,7 +460,7 @@ func (m Message) GenRpcUpdateReqMessage(buf *bytes.Buffer) {
 	//resp
 	m.Name = "Update" + mOrginName + "Resp"
 	m.Fields = []MessageField{
-		{Name: "id", Typ: "int64", tag: 1},
+		{Name: "id", Typ: "int64", tag: 1,  Comment: "id"},
 	}
 	buf.WriteString(fmt.Sprintf("%s\n", m))
 
@@ -564,8 +564,8 @@ func (m Message) GenRpcSearchReqMessage(buf *bytes.Buffer) {
 	m.Name = "Search" + mOrginName + "Resp"
 	m.Fields = []MessageField{
 		{Typ: "repeated " + mOrginName, Name: stringx.From(firstWord + mOrginName[1:]).ToCamelWithStartLower(), tag: 1, Comment: stringx.From(firstWord + mOrginName[1:]).ToCamelWithStartLower()},
-		{Typ: "int64", Name: "limit", tag: 2},
-		{Typ: "int64", Name: "total", tag: 3},
+		{Typ: "int64", Name: "limit", tag: 2, Comment: "limit"},
+		{Typ: "int64", Name: "total", tag: 3, Comment: "total"},
 	}
 	buf.WriteString(fmt.Sprintf("%s\n", m))
 
