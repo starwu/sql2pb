@@ -262,6 +262,7 @@ func (s *Schema) String() string {
 		funcTpl += "\t rpc Del" + m.Name + "(Del" + m.Name + "Req) returns (Del" + m.Name + "Resp); \n"
 		funcTpl += "\t rpc Get" + m.Name + "ById(Get" + m.Name + "ByIdReq) returns (Get" + m.Name + "ByIdResp); \n"
 		funcTpl += "\t rpc Search" + m.Name + "(Search" + m.Name + "Req) returns (Search" + m.Name + "Resp); \n"
+		funcTpl += "\t rpc Get" + m.Name + "ListAll(Get" + m.Name + "ListAllReq) returns (Get" + m.Name + "ListAllResp); \n"
 	}
 	funcTpl = funcTpl + "\n}"
 	buf.WriteString(funcTpl)
